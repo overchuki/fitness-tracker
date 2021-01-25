@@ -289,16 +289,16 @@ const modify_activity_db = async (req, res) => {
                     if(!arrExists&&index>=0){
                         switch(exType){
                             case 'lift':
-                                let newVal = { weight: value, reps, theomax: newTheoMax, date };
-                                act.values.splice(index, 0, newVal);
-                                let newCache = getNewCacheLift(newVal, act.liftingCache);
+                                let newValLf = { weight: value, reps, theomax: newTheoMax, date };
+                                act.values.splice(index, 0, newValLf);
+                                let newCache = getNewCacheLift(newValLf, act.liftingCache);
                                 console.log(newCache);
                                 act.liftingCache = newCache;
                                 response.success = { msg: 'added to array', vals: act.values };
                                 break;
                             case 'bodyweight':
-                                let newVal = { weight: value, date };
-                                act.values.splice(index, 0, newVal);
+                                let newValBW = { weight: value, date };
+                                act.values.splice(index, 0, newValBW);
                                 //update cache once it exists
                                 response.success = { msg: 'added to array', vals: act.values };
                                 break;
@@ -333,7 +333,6 @@ const modify_activity_db = async (req, res) => {
                                     tempObj.theomax = newTheoMax;
                                     act.values.splice(index, 0, tempObj);
                                     let newCache = getNewCacheLift(tempObj, act.liftingCache);
-                                    console.log(newCache);
                                     act.liftingCache = newCache;
                                     response.success = { msg: 'modded array', vals: act.values };
                                     break;
@@ -369,11 +368,11 @@ const modify_activity_db = async (req, res) => {
                     act.values.splice(index, 1);
                     switch(exType){
                         case 'lift':
-                            let { max, theo, totalWeight } = getNewCacheLiftScan(act.values);
-                            console.log(max, theo, totalWeight);
-                            act.liftingCache.max = max;
-                            act.liftingCache.theo = theo;
-                            act.liftingCache.totalWeight = totalWeight;
+                            let newCacheLift = getNewCacheLiftScan(act.values);
+                            console.log(newCacheLift);
+                            act.liftingCache.max = newCacheLift.max;
+                            act.liftingCache.theo = newCacheLift.theo;
+                            act.liftingCache.totalWeight = newCacheLift.totalWeight;
                             break;
                         case 'bodyweight':
                             //update bw cache
@@ -405,14 +404,14 @@ const modify_activity_db = async (req, res) => {
             if(convert){
                 switch(exType){
                     case 'lift':
-                        let { arr, cache } = convertValsKGLB(act.values, unit, exType, act.liftingCache);
-                        act.values = arr;
-                        act.liftingCache = cache;
+                        let convertedValsLift = convertValsKGLB(act.values, unit, exType, act.liftingCache);
+                        act.values = convertedValsLift.arr;
+                        act.liftingCache = convertedValsLift.cache;
                         break;
                     case 'bodyweight':
-                        let { arr, cache } = convertValsKGLB(act.values, unit, exType, act.bodyweightCache);
-                        act.values = arr;
-                        act.bodyweightCache = cache;
+                        let convertedValsBW = convertValsKGLB(act.values, unit, exType, act.bodyweightCache);
+                        act.values = convertedValsBW.arr;
+                        act.bodyweightCache = convertedValsBW.cache;
                         break;
                     case 'hrate':
                         throw Error('heartrate not yet supported');

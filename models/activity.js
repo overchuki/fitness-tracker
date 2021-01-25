@@ -1,6 +1,4 @@
-const { Double } = require("mongodb");
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 const activitySchema = new Schema({
@@ -35,7 +33,7 @@ const activitySchema = new Schema({
     liftingCache: {
         max: {
             weight: {
-                type: Double
+                type: Number
             },
             reps: {
                 type: Number
@@ -43,23 +41,23 @@ const activitySchema = new Schema({
         },
         theo: {
             max: {
-                type: Double
+                type: Number
             },
             min: {
-                type: Double
+                type: Number
             }
         },
         totalWeight: {
-            type: Double
+            type: Number
         }
     },
     bodyweightCache: {
         bounds: {
             max: {
-                type: Double
+                type: Number
             },
             min: {
-                type: Double
+                type: Number
             }
         }
     }
