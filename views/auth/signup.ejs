@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="mainPage">
+    <%- include('../partials/head.ejs') %>
+    <body class="mainPage dark-main">
+        <div class="content container">
+            <%- include('../partials/nav.ejs') %>
+            <div class = "inField-dark">
+                <form id="signup-form">
+                    <h3 class = "form-title-dark"><%= title %></h3>
+                    <div class="mb-3">
+                        <label for="createUsernameIn" class="form-label labels-dark">Username</label>
+                        <input type="text" class="form-control input-cust-dark" id="createUsernameIn" minlength="4" maxlength="20" pattern=".{4,20}" required name="username">
+                        <div id="usernameHelpBlock" class="form-text">
+                            <span id="username-error" class="error-message"></span>
+                            Your username must be 4-20 characters long.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createEmailIn" class="form-label labels-dark">Email (Optional)</label>
+                        <input type="email" class="form-control input-cust-dark" id="createEmailIn" maxlength="254" name="email">
+                        <div id="emailHelpBlock" class="form-text">
+                            <span id="email-error" class="error-message"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createPasswordIn" class="form-label labels-dark">Password</label>
+                        <input type="password" class="form-control input-cust-dark" id="createPasswordIn" minlength="8" maxlength="20" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}" required name="password">
+                        <div id="passwordHelpBlock" class="form-text">
+                            <span id="password-error" class="error-message"></span>
+                            Your password must be 8-20 characters long, contain one uppercase letter, one lowercase letter, a number, and must not contain spaces, special characters, or emoji.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createPasswordTwoIn" class="form-label labels-dark">Re-enter Password</label>
+                        <input type="password" class="form-control input-cust-dark" id="createPasswordTwoIn" minlength="8" maxlength="20" required>
+                    </div>
+                    <button type="submit" class="btn cust-btn-dark">Submit</button>
+                    <div class = "form-text">
+                        Already have an account? 
+                        <a class = "create-btn-dark" href = "./login">Log In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src = "../js/signup.js"></script>
+    </body>
+    <%- include('../partials/footer.ejs') %>
+</html>

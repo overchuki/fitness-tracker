@@ -1,0 +1,15 @@
+Dark Red Theme
+#1A1A1D - black almost
+#4E4E50 - dark grey
+#6F2232 - dark burgundy
+#950740 - dark pink/purpleish
+#C3073F - darkish red
+#f8f9fa - white/text
+
+Lighter Theme
+#EDC7B7 - skin tone
+#EEE2DC - pale skin tone
+#BAB2B5 - grey/skin ish tone
+#123C69 - navy blue (#0e2e50 - darker version for hover)
+#AC3B61 - red/pink ish
+#f8f9fa - white/text

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="mainPage">
+    <%- include('../partials/head.ejs') %>
+    <body class="mainPage dark-main">
+        <div class="content container">
+            <%- include('../partials/nav.ejs') %>
+            <div class = "inField-dark">
+                <form id="mainForm">
+                    <h3 class = "form-title-dark"><%= title %></h3>
+                    <div class="mb-3">
+                        <label for="logInUsername" class="form-label labels-dark">Username or Email</label>
+                        <input type="text" class="form-control input-cust-dark" id="logInUsername" maxlength="254" required name="username">
+                        <div id="userHelpBlock" class="form-text">
+                            <span id="user-error" class="error-message"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logInPassword" class="form-label labels-dark">Password</label>
+                        <input type="password" class="form-control input-cust-dark" id="logInPassword" maxlength="20" required name="password">
+                        <div id="passHelpBlock" class="form-text">
+                            <span id="pass-error" class="error-message"></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn cust-btn-dark">Submit</button>
+                    <div class = "form-text">
+                        Don't have an account? 
+                        <a class = "create-btn-dark" href = "./signup">Create One</a>
+                    </div>
+                </form>
+            </div>
+            <div class="push"></div>
+        </div>
+        <script src = "../js/login.js"></script>
+    </body>
+    <%- include('../partials/footer.ejs') %>
+</html>

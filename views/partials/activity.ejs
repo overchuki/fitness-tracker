@@ -1,0 +1,29 @@
+<div class="chartDiv">
+    <canvas id="chartDiv"></canvas>
+</div>
+<div class="lift-content">
+    <div class="row mainRow">
+        <div class="col-6">
+            <div class="inField-dark-small">
+                <%- include('./entryForms/liftForm.ejs') %>
+            </div>
+        </div>
+        <div class="col-6 no-pdn">
+            <div class="row infoRow">
+                <div class="inField-dark-small">
+                    <h4 class = "title-dark">Info</h4>
+                    <%- include('./infoDivs/liftInfo.ejs') %>
+                </div>
+            </div>
+            <div class="row">
+                <div class="inField-dark-small">
+                    <h4 class = "title-dark">Settings</h4>
+                    <div class="stng-div">
+                        <a id="edit-lift-btn" href="./mod-lift<%= activity._id %>" class="settingBtn btn-HL"><i class="fas fa-pen"></i> EDIT</a>
+                        <a id="delete-lift-btn" href="./rem-lift<%= activity._id %>" class="settingBtn btn-HL"><i class="fas fa-trash"></i> DELETE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

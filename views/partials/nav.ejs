@@ -1,0 +1,72 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <% if(title==='Home'){ %>
+            <a class="navbar-brand" href="#"><i class="fas fa-dumbbell"></i></a>
+        <% }else{ %>
+            <a class="navbar-brand" href="./"><i class="fas fa-dumbbell"></i></a>
+        <% } %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <% if(title==='Home'){ %>
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <% }else{ %>
+                        <a class="nav-link" href="./">Home</a>
+                    <% } %>
+                </li>
+                <li class="nav-item">
+                    <% if(title==='Lifting'){ %>
+                        <a class="nav-link active" aria-current="page" href="#">Lifting</a>
+                    <% }else{ %>
+                        <a class="nav-link" href="./lifting">Lifting</a>
+                    <% } %>
+                </li>
+                <li class="nav-item">
+                    <% if(title==='Bodyweight'){ %>
+                        <a class="nav-link active" aria-current="page" href="#">Bodyweight</a>
+                    <% }else{ %>
+                        <a class="nav-link" href="./bodyweight">Bodyweight</a>
+                    <% } %>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Heart Rate</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Cardio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">BW Exercises</a>
+                </li>
+                <li class="nav-item">
+                    <% if(title==='Settings'){ %>
+                        <a class="nav-link active" aria-current="page" href="#">Settings</a>
+                    <% }else{ %>
+                        <a class="nav-link" href="./settings">Settings</a>
+                    <% } %>
+                </li>
+            </ul>
+            <% if(user){ %>
+                <span class="navbar-text">
+                    Welcome, <%= user.username %>
+                </span>
+            <% } %>
+            <ul class="right-ul">
+                <% if(user){ %>
+                <li class="right-li">
+                    <a id="logout-btn" href="/logout" class="nav-link btn-HL">LOG OUT</a>
+                </li>
+                <% }else{ %>
+                <li class="right-li">
+                    <a id="login-btn" href="/login" class="nav-link btn-noHL">LOG IN</a>
+                </li>
+                <li class="right-li">
+                    <a id="signup-btn" href="/signup" class="nav-link btn-HL">SIGN UP</a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="mainPage">
+    <%- include('../partials/head.ejs') %>
+    <body class="mainPage dark-main">
+        <input type="hidden" id="hiddenToken" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" id="hiddenActId" name="_id" value="<%= activity._id %>">
+        <div class="content container">
+            <%- include('../partials/nav.ejs') %>
+            <div class="mod-lift-title">
+                <div class="left-rtrn-btn">
+                    <a id="return-lift-btn" href="./get-lift<%= activity._id %>" class="btn-HL-rtrn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+                <h3 class = "title-dark">Edit</h3>
+            </div>
+            <hr class="solid">
+            <div class="main-stngs">
+                <div class="row">
+                    <div class="col-2 edit-lift-title pad-top">
+                        Name
+                    </div>
+                    <div class="col-3 edit-lift-form">
+                        <input type="text" class="form-control input-cust-dark" id="modLiftName" maxlength="20" name="lift" value="<%= activity.name %>" required>
+                    </div>
+                    <div class="col-1 edit-lift-form">
+                        <button id="saveNewName" type="button" class="btn cust-btn-dark" >Save</button>
+                    </div>
+                    <div class="col-6 txt-left">
+                        <span id="name-error-msg" class="error-message"></span>
+                    </div>
+                </div>
+                <hr class="solid">
+                <div class="row">
+                    <div class="col-2 edit-lift-title">
+                        Unit
+                    </div>
+                    <div class="col-3 edit-lift-form">
+                        <div class="radio-inline">
+                            <input type="radio" id="modLbRadio" name="unitRadio" class="custom-control-input" required>
+                            <label class="custom-control-label" for="modLbRadio">Pounds</label>
+                        </div>
+                        <div class="radio-inline">
+                            <input type="radio" id="modKgRadio" name="unitRadio" class="custom-control-input" required>
+                            <label class="custom-control-label" for="modKgRadio">Kilograms</label>
+                        </div>
+                        <div class="mod-checkbox">
+                            <input type="checkbox" class="form-check-input" id="modConvertUnitCheck">
+                            <label class="form-check-label" for="modConvertUnitCheck">Convert Weight Values</label>
+                        </div>
+                    </div>
+                    <div class="col-1 edit-lift-form">
+                        <button id="saveNewUnit" type="button" class="btn cust-btn-dark" >Save</button>
+                    </div>
+                    <div class="col-6 txt-left">
+                        <span id="unit-error-msg" class="error-message"></span>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid">
+            <div id="entryDiv" class="entry-div">
+                <h6 class = "title-dark">Edit Entries</h6>
+            </div>
+            <div class="push"></div>
+        </div>
+        <script src = "../js/lift/stn-lift.js"></script>
+    </body>
+    <%- include('../partials/footer.ejs') %>
+</html>

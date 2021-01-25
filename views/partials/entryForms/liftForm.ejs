@@ -1,0 +1,19 @@
+<form id="entryForm">
+    <h5 class = "form-title-small">Add Entry</h5>
+    <input type="hidden" id="hiddenToken" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" id="hiddenActId" name="_id" value="<%= activity._id %>">
+    <div class="mb-3">
+        <label for="addEntryWeight" class="form-label labels-dark">Weight, Reps, and Date</label>
+        <input type="number" class="form-control input-cust-dark" id="addEntryWeight" placeholder="Weight (<%= activity.unit %>)" required name="weight">
+    </div>
+    <div class="mb-3">
+        <input type="number" max="20" min="1" id="addEntryReps" class="form-control input-cust-dark-small" placeholder="Reps (1-20)" name="reps" required>
+    </div>
+    <div class="mb-3 no-btm-marg">
+        <input type="date" class="form-control input-cust-dark" id="addEntryDate" required name="date">
+        <div id="dateHelpBlock" class="form-text">
+            <span id="add-entry-err-message" class="error-message"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn cust-btn-dark">Add</button>
+</form>
