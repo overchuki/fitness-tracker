@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const dbController = require('../controllers/databaseController');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
@@ -52,7 +52,7 @@ const createToken = (id) => {
 const login_user = async (req, res) => {
     const { username, password } = req.body;
     try{
-        const user = await User.login(username, password);
+        const user = await dbController.login_user(username, password);
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAgeSeconds * 1000 });
         res.status(201).json({ userId: user._id });
@@ -65,7 +65,7 @@ const login_user = async (req, res) => {
 const signup_user = async (req, res) => {
     const { username, email, password } = req.body;
     try{
-        const user = await User.create({ username, email, password });
+        const user = await dbController.create_new_user(username, email, password);
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAgeSeconds * 1000 });
         res.status(201).json({ userId: user._id });

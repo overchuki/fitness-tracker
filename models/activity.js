@@ -15,6 +15,10 @@ const activitySchema = new Schema({
         type: String,
         required: true
     },
+    unit: {
+        type: String,
+        required: true
+    },
     values: {
         type: Array,
         "default": [],
@@ -25,10 +29,6 @@ const activitySchema = new Schema({
             type: Number,
             required: true
         }
-    },
-    unit: {
-        type: String,
-        required: true
     },
     liftingCache: {
         max: {

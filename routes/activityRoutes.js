@@ -3,7 +3,7 @@ const router = express.Router();
 const activityController = require('../controllers/activityController');
 
 //lifting html page
-router.get('/lifting', activityController.get_activity_list_page);
+router.get('/act-list:exType', activityController.get_activity_list_page);
 
 //form to add a new lift/submission of form
 router.get('/add-lift:exType', activityController.get_add_activity_form);
@@ -20,5 +20,8 @@ router.put('/mod-lift:id', activityController.modify_activity_db);
 //delete a lift
 router.get('/rem-lift:id', activityController.get_remove_activity_page);
 router.delete('/del-lift:id', activityController.remove_activity);
+
+//dev method
+router.get('/test-classes', activityController.test_classes);
 
 module.exports = router;

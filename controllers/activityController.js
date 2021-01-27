@@ -1,9 +1,14 @@
-const Activity = require('../models/activity');
 const maxVals = [1.0,0.95,0.925,0.9,0.875,0.85,0.825,0.8,0.775,0.75,0.725,0.7,0.675,0.65,0.625,0.6,0.575,0.55,0.525,0.5];
 const conversionFactorLb = 2.20462262;
 const conversionFactorKg = 0.45359237;
 const types = [['lift', 'bodyweight'], ['hrate'], ['cardio'], ['bwex']];
 const validUnits = [['lbs', 'kgs'], ['bpm'], ['miles', 'km'], ['reps']];
+const dbController = require('../controllers/databaseController');
+const actClassController = require('../controllers/activityClassController');
+
+const test_classes = () => {
+    res.status(400).json({ msg: 'currently empty' });
+}
 
 //inner functions
 const handleErrors = (err) => {
@@ -149,14 +154,18 @@ const binarySearchByDate = (arr, target) => {
 }
 
 //get requests for pages
+//****modify views to send correct requests to server with type param
 const get_activity_list_page = async (req, res) => {
-    let act = await Activity.find({ userId: res.locals.user._id, exType: 'lift' });
+    // let act = await Activity.find({ userId: res.locals.user._id, exType: 'lift' });
+    let type = req.params.exType;
+    let act = await dbController.get_activity_array(res.locals.user._id, type);
     res.locals.activities = act;
     res.render('tabs/lifting', {
         title: 'Lifting'
     });
 }
 
+//****get different forms based on the lift, or render value to be modified in the view
 const get_add_activity_form = (req, res) => {
     res.render('activities/add-lift.ejs', {
         title: 'Add Lift',
@@ -164,9 +173,11 @@ const get_add_activity_form = (req, res) => {
     });
 }
 
+//****get custom information to display based off exType
 const get_activity_page = async (req, res) => {
     let actId = req.params.id;
-    let act = await Activity.findById(actId);
+    // let act = await Activity.findById(actId);
+    let act = await dbController.get_activity_by_id(actId);
     res.locals.activity = act;
     res.render('activities/lift', {
         title: act.name,
@@ -174,9 +185,11 @@ const get_activity_page = async (req, res) => {
     });
 }
 
+//****modify for different lifts
 const get_activity_values = async (req, res) => {
     let actId = req.params.id;
-    let act = await Activity.findById(actId);
+    // let act = await Activity.findById(actId);
+    let act = await dbController.get_activity_by_id(actId);
     let vals = act.values;
     let theomax = act.theomax;
     let theomin = act.theomin;
@@ -184,9 +197,11 @@ const get_activity_values = async (req, res) => {
     res.json({ vals, theomax, theomin, unit });
 }
 
+//****custom main settings and value displays for edit page
 const get_modify_activity_page = async (req, res) => {
     let actId = req.params.id;
-    let act = await Activity.findById(actId);
+    // let act = await Activity.findById(actId);
+    let act = await dbController.get_activity_by_id(actId);
     res.locals.activity = act;
     res.render('activities/mod-lift', {
         title: 'Edit '+act.name,
@@ -194,6 +209,7 @@ const get_modify_activity_page = async (req, res) => {
     });
 }
 
+//****maybe modify, just look over
 const get_remove_activity_page = (req, res) => {
     let actId = req.params.id;
     res.locals.actId = actId;
@@ -204,61 +220,17 @@ const get_remove_activity_page = (req, res) => {
 }
 
 //add new activity to db
-//all: name, exType, userId, unit, values, duration
-//lift: values: [{ value, reps, theomax, date }], max: { weight, reps }, theo: { max, min }
-//bodyweight: values: [{ weight, date }]
-//hrate: -
-//cardio: -
-//bwex: -
 const add_activity_db = async (req, res) => {
-    let { name, value, reps, date, exType, userId, unit } = req.body;
-    
-    let NewActivity = { name, exType, userId, unit };
-    let duration;
-    
-    let theomax;
-    
+    let userInput = req.body;
+
     try{
-        value = parseInt(value);
-        if(!verifyUnit(exType, unit)){
-            throw Error('Invalid unit for exercise type');
-        }
-        duration = Math.round((new Date() - toDate(date)) / (1000 * 60 * 60 * 24));
-        if(duration < 0){ duration = 0 };
-        NewActivity.commonCache.duration = duration;
-        switch(exType){
-            case 'lift':
-                reps = parseInt(reps);
-                if(unit==='kgs'){
-                    value = Math.round((value*conversionFactorLb + Number.EPSILON) * 10000) / 10000;
-                }
-                theomax = findMax(value,reps);
-                NewActivity.values = [{ weight: value, reps, theomax, date }];
-                NewActivity.liftingCache = { max: { weight: value, reps }, theo: { max: theomax, min: theomax }, totalWeight: (value*reps) };
-                console.log(NewActivity);
-                break;
-            case 'bodyweight':
-                if(unit==='kgs'){
-                    value = Math.round((value*conversionFactorLb + Number.EPSILON) * 10000) / 10000;
-                }
-                NewActivity.values = [{ weight: value, date }];
-                break;
-            case 'hrate':
-                throw Error('heartrate not yet supported');
-                break;
-            case 'cardio':
-                throw Error('cardio not yet supported');
-                break;
-            case 'bwex':
-                throw Error('bodyweight exercises not yet supported');
-                break;
-            default:
-                throw Error('Unrecongnized exercise type.');
-        }
-        let activity = await Activity.create(NewActivity);
+        let test = new actClassController.ActivityObj(userInput);
+        test.initializeActivity();
+        console.log(test.NewActivity);
+        let activity = await dbController.create_new_activity(test.NewActivity);
         res.status(201).json({ activity });
     }catch(err){
-        const errors = handleErrors(err);
+        let errors = handleErrors(err);
         res.status(400).json({ errors });
     }
 }
@@ -272,7 +244,8 @@ const add_activity_db = async (req, res) => {
 const modify_activity_db = async (req, res) => {
     let { type, value, reps, date, name, oldDate, unit, convert, exType  } = req.body;
     let actId = req.params.id;
-    let act = await Activity.findById(actId);
+    // let act = await Activity.findById(actId);
+    let act = await dbController.get_activity_by_id(actId);
     let response = {};
 
     try{
@@ -432,14 +405,20 @@ const modify_activity_db = async (req, res) => {
         }else{
             throw Error('Unrecognized modify request');
         }
-        await act.save()
-                .then(doc => {
-                    res.json(response);
-                })
-                .catch(err => {
-                    const errors = handleErrors(err);
-                    res.status(400).json({ errors });
-                });
+        // await act.save()
+        //         .then(doc => {
+        //             res.json(response);
+        //         })
+        //         .catch(err => {
+        //             const errors = handleErrors(err);
+        //             res.status(400).json({ errors });
+        //         });
+        let saved = await dbController.save_activity_document(act);
+        if(saved){
+            res.json(response);
+        }else{
+            throw Error('Unable to save document.');
+        }
     }catch(err){
         const errors = handleErrors(err);
         res.status(400).json({ errors });
@@ -450,7 +429,8 @@ const remove_activity = async (req, res) => {
     let actId = req.params.id;
     let response = {};
     try{
-        let remAct = await Activity.findByIdAndRemove(actId);
+        // let remAct = await Activity.findByIdAndRemove(actId);
+        let remAct = await dbController.remove_activity_by_id(actId);
         if(remAct){
             response = { success: { msg: 'removed lift' } };
         }else{
@@ -472,5 +452,6 @@ module.exports = {
     get_activity_list_page,
     get_activity_values,
     get_modify_activity_page,
-    get_remove_activity_page
+    get_remove_activity_page,
+    test_classes
 }
