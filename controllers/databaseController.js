@@ -38,9 +38,10 @@ const create_new_activity = async (ACT_OBJ) => {
 const save_activity_document = async (ACT_DOC) => {
     await ACT_DOC.save()
         .then(doc => {
-            return true;
+            return doc;
         })
         .catch(err => {
+            console.log(err);
             throw err;
         });
 }

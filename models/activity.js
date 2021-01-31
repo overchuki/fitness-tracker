@@ -30,34 +30,36 @@ const activitySchema = new Schema({
             required: true
         }
     },
-    liftingCache: {
-        max: {
-            weight: {
-                type: Number
+    specificCache: {
+        lift: {
+            max: {
+                weight: {
+                    type: Number
+                },
+                reps: {
+                    type: Number
+                }
             },
-            reps: {
+            theo: {
+                max: {
+                    type: Number
+                },
+                min: {
+                    type: Number
+                }
+            },
+            totalWeight: {
                 type: Number
             }
         },
-        theo: {
-            max: {
-                type: Number
-            },
-            min: {
-                type: Number
-            }
-        },
-        totalWeight: {
-            type: Number
-        }
-    },
-    bodyweightCache: {
-        bounds: {
-            max: {
-                type: Number
-            },
-            min: {
-                type: Number
+        bodyweight: {
+            bounds: {
+                max: {
+                    type: Number
+                },
+                min: {
+                    type: Number
+                }
             }
         }
     }
