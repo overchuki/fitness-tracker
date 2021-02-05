@@ -1,0 +1,48 @@
+<form id="actForm">
+    <h3 class = "form-title-dark"><%= title %></h3>
+    <input type="hidden" id="hiddenToken" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" id="hiddenUserId" name="_id" value="<%= user._id %>">
+    <input type="hidden" id="exType" name="_id" value="<%= exType %>">
+    <div class="mb-3">
+        <label for="addActName" class="form-label labels-dark">Name of Lift</label>
+        <input type="text" class="form-control input-cust-dark" id="addActName" maxlength="20" required name="name">
+        <div id="nameHelpBlock" class="form-text">
+            <span id="name-act-error" class="error-message"></span>
+            What is the name of the lift?
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="addLiftWeight" class="form-label labels-dark">Weight</label>
+        <input type="number" class="form-control input-cust-dark marg-btm" id="addLiftWeight" required name="weight">
+        <div class="radio-inline">
+            <input type="radio" id="lbRadio" name="unitRadio" class="custom-control-input" required>
+            <label class="custom-control-label" for="lbRadio">Pounds</label>
+        </div>
+        <div class="radio-inline">
+            <input type="radio" id="kgRadio" name="unitRadio" class="custom-control-input" required>
+            <label class="custom-control-label" for="kgRadio">Kilograms</label>
+        </div>
+        <div id="weightHelpBlock" class="form-text">
+            <span id="weight-lift-error" class="error-message"></span>
+            Enter weight and Units
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="addLiftReps" class="form-label labels-dark">Reps</label>
+        <input type="number" max="20" min="1" id="addLiftReps" class="form-control input-cust-dark-small" name="reps" required>
+        <div id="repsHelpBlock" class="form-text">
+            <span id="reps-error" class="error-message"></span>
+            Enter highest reps done for the weight (1-20)
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="addActDate" class="form-label labels-dark">Date</label>
+        <input type="date" class="form-control input-cust-dark" id="addActDate" required name="date">
+        <div id="dateHelpBlock" class="form-text">
+            <span id="bottom-error" class="error-message"></span>
+            Date of exercise
+        </div>
+    </div>
+    <button type="submit" class="btn cust-btn-dark">Add</button>
+    <a href="./act-list<%= exType %>" class="btn cust-cancel-btn-dark">Cancel</a>
+</form>

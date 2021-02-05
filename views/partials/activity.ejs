@@ -5,22 +5,31 @@
     <div class="row mainRow">
         <div class="col-6">
             <div class="inField-dark-small">
-                <%- include('./entryForms/liftForm.ejs') %>
+                <% if(exType==='lift'){ %>
+                    <%- include('./entryForms/liftForm.ejs') %>
+                <% }else if(exType==='bodyweight'){ %>
+                    BW form here.
+                <% }else if(exType==='hrate'){ %>
+                    Heart Rate form here.
+                <% }else if(exType==='cardio'){ %>
+                    Cardio form here.
+                <% }else if(exType==='bwex'){ %>
+                    BWEX form here.
+                <% } %>
             </div>
         </div>
         <div class="col-6 no-pdn">
             <div class="row infoRow">
-                <div class="inField-dark-small">
+                <div id="activity-info-container" class="inField-dark-small">
                     <h4 class = "title-dark">Info</h4>
-                    <%- include('./infoDivs/liftInfo.ejs') %>
                 </div>
             </div>
             <div class="row">
                 <div class="inField-dark-small">
                     <h4 class = "title-dark">Settings</h4>
                     <div class="stng-div">
-                        <a id="edit-lift-btn" href="./mod-lift<%= activity._id %>" class="settingBtn btn-HL"><i class="fas fa-pen"></i> EDIT</a>
-                        <a id="delete-lift-btn" href="./rem-lift<%= activity._id %>" class="settingBtn btn-HL"><i class="fas fa-trash"></i> DELETE</a>
+                        <a id="edit-lift-btn" href="./mod-act<%= activity._id %>" class="settingBtn btn-HL"><i class="fas fa-pen"></i> EDIT</a>
+                        <a id="delete-lift-btn" href="./rem-act<%= activity._id %>" class="settingBtn btn-HL"><i class="fas fa-trash"></i> DELETE</a>
                     </div>
                 </div>
             </div>

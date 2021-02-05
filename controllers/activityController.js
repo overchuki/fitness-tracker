@@ -18,15 +18,18 @@ const get_activity_list_page = async (req, res) => {
     let type = req.params.exType;
     let act = await dbController.get_activity_array(res.locals.user._id, type);
     res.locals.activities = act;
-    res.render('tabs/lifting', {
-        title: 'Lifting'
+    res.locals.exType = type;
+    res.render('tabs/actList', {
+        title: type.toUpperCase()
     });
 }
 
 //****get different forms based on the lift, or render value to be modified in the view
 const get_add_activity_form = (req, res) => {
-    res.render('activities/add-lift.ejs', {
-        title: 'Add Lift',
+    let type = req.params.exType;
+    res.locals.exType = type;
+    res.render('activities/add-lift', {
+        title: 'Add '+type,
         csrfToken: req.csrfToken()
     });
 }
