@@ -13,10 +13,10 @@ actForm.addEventListener('submit', function(e){
     var type = 'POST';
 
     var data = {};
-    data['name'] = addLiftName.value.trim();
-    data['date'] = addLiftDate.value.trim();
-    data['userId'] = addLiftUserId.value;
-    data['_csrf'] = addLiftToken.value;
+    data['name'] = addActName.value.trim();
+    data['date'] = addActDate.value.trim();
+    data['userId'] = addActUserId.value;
+    data['_csrf'] = addActToken.value;
 
     switch(exType.value.trim()){
         case 'lift':

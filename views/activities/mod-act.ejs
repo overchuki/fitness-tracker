@@ -8,7 +8,7 @@
             <%- include('../partials/nav.ejs') %>
             <div class="mod-lift-title">
                 <div class="left-rtrn-btn">
-                    <a id="return-lift-btn" href="./get-lift<%= activity._id %>" class="btn-HL-rtrn"><i class="fas fa-arrow-left"></i> Back</a>
+                    <a id="return-lift-btn" href="./get-act<%= activity._id %>" class="btn-HL-rtrn"><i class="fas fa-arrow-left"></i> Back</a>
                 </div>
                 <h3 class = "title-dark">Edit</h3>
             </div>
@@ -42,10 +42,6 @@
                             <input type="radio" id="modKgRadio" name="unitRadio" class="custom-control-input" required>
                             <label class="custom-control-label" for="modKgRadio">Kilograms</label>
                         </div>
-                        <div class="mod-checkbox">
-                            <input type="checkbox" class="form-check-input" id="modConvertUnitCheck">
-                            <label class="form-check-label" for="modConvertUnitCheck">Convert Weight Values</label>
-                        </div>
                     </div>
                     <div class="col-1 edit-lift-form">
                         <button id="saveNewUnit" type="button" class="btn cust-btn-dark" >Save</button>
@@ -61,7 +57,7 @@
             </div>
             <div class="push"></div>
         </div>
-        <script src = "../js/lift/stn-lift.js"></script>
+        <script src = "../js/mod-lift.js"></script>
     </body>
     <%- include('../partials/footer.ejs') %>
 </html>
