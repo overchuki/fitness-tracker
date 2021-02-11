@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="mainPage">
+    <%- include('../partials/head.ejs') %>
+    <body class="mainPage dark-main">
+        <div class="content container">
+            <%- include('../partials/nav.ejs') %>
+            <div class = "inField-dark">
+                <% if(exType==='lift'){ %>
+                    <%- include('./addForms/liftForm.ejs') %>
+                <% }else if(exType==='bodyweight'){ %>
+                    BW form here.
+                <% }else if(exType==='hrate'){ %>
+                    Heart Rate form here.
+                <% }else if(exType==='cardio'){ %>
+                    Cardio form here.
+                <% }else if(exType==='bwex'){ %>
+                    BWEX form here.
+                <% } %>
+            </div>
+            <div class="push"></div>
+        </div>
+        <script src="../js/add-act.js"></script>
+    </body>
+    <%- include('../partials/footer.ejs') %>
+</html>

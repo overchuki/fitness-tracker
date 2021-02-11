@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html class="mainPage">
+    <%- include('../partials/head.ejs') %>
+    <body class="mainPage dark-main">
+        <div class="content container">
+            <%- include('../partials/nav.ejs') %>
+            <h3 class = "title-dark"><%= title %></h3>
+            <hr class="solid">
+            <div class="lift-content">
+                <% for(var i = 0; i<activities.length; i++){ %>
+                    <a href="./get-act<%= activities[i]._id %>">
+                        <div class="disp-lift">
+                            <%= activities[i].name %>
+                        </div>
+                    </a>
+                <% } %>
+                <a href="./add-act<%= exType %>"><button type="button" id="create-lift" class="btn create-lift-btn"><i class="fas fa-plus"></i> ADD NEW <%= exType.toUpperCase() %></button></a>
+            </div>
+            <div class="push"></div>
+        </div>
+    </body>
+    <%- include('../partials/footer.ejs') %>
+</html>

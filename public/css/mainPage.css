@@ -135,7 +135,7 @@
     color:  #f8f9fa;
 }
 .create-lift-btn{
-    width: 960px;
+    width: 100%;
     height: 100px;
     background: #4E4E50;
     color: #f8f9fa;
@@ -147,8 +147,8 @@
 }
 .disp-lift{
     background: #2b2b2c;
-    width: 960px;
-    height: 100px;
+    width: 100%;
+    height: 50px;
     border-radius: 20px;
     margin-bottom: 20px;
     border: 3px solid #6F2232;
@@ -164,9 +164,6 @@
 }
 hr.solid {
     border-top: 3px solid #C3073F;
-}
-.lift-wrapper{
-    height: 64px;
 }
 a{
     text-decoration: none;
