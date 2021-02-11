@@ -13,7 +13,6 @@ const handleErrors = (err) => {
 }
 
 //get requests for pages
-//****modify views to send correct requests to server with type param
 const get_activity_list_page = async (req, res) => {
     let type = req.params.exType;
     let act = await dbController.get_activity_array(res.locals.user._id, type);
@@ -24,12 +23,11 @@ const get_activity_list_page = async (req, res) => {
     });
 }
 
-//****get different forms based on the lift, or render value to be modified in the view
 const get_add_activity_form = (req, res) => {
     let type = req.params.exType;
     res.locals.exType = type;
-    res.render('activities/add-lift', {
-        title: 'Add '+type,
+    res.render('activities/add-act', {
+        title: 'Add '+type.toUpperCase(),
         csrfToken: req.csrfToken()
     });
 }
