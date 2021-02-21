@@ -32,47 +32,43 @@ const get_add_activity_form = (req, res) => {
     });
 }
 
-//****get custom information to display based off exType
 const get_activity_page = async (req, res) => {
     let actId = req.params.id;
-    // let act = await Activity.findById(actId);
     let act = await dbController.get_activity_by_id(actId);
     res.locals.activity = act;
-    res.render('activities/lift', {
+    res.locals.exType = act.exType;
+    res.render('activities/main-act', {
         title: act.name,
         csrfToken: req.csrfToken()
     });
 }
 
-//****modify for different lifts
 const get_activity_values = async (req, res) => {
     let actId = req.params.id;
-    // let act = await Activity.findById(actId);
     let act = await dbController.get_activity_by_id(actId);
+    
     let vals = act.values;
-    let theomax = act.theomax;
-    let theomin = act.theomin;
+    let ACT_OBJ = new actClassController.ActivityObj({ exType: act.exType });
+    let cache = ACT_OBJ.getCacheRoot(act);
     let unit = act.unit;
-    res.json({ vals, theomax, theomin, unit });
+    
+    res.json({ vals, cache, unit });
 }
 
-//****custom main settings and value displays for edit page
 const get_modify_activity_page = async (req, res) => {
     let actId = req.params.id;
-    // let act = await Activity.findById(actId);
     let act = await dbController.get_activity_by_id(actId);
     res.locals.activity = act;
-    res.render('activities/mod-lift', {
+    res.render('activities/mod-act', {
         title: 'Edit '+act.name,
         csrfToken: req.csrfToken()
     });
 }
 
-//****maybe modify, just look over
 const get_remove_activity_page = (req, res) => {
     let actId = req.params.id;
     res.locals.actId = actId;
-    res.render('activities/rem-lift', {
+    res.render('activities/rem-act', {
         title: 'Delete',
         csrfToken: req.csrfToken()
     });

@@ -140,6 +140,10 @@ class ActivityObj {
         return -1;
     }
 
+    getCacheRoot(ACT_DOC){
+        return this.entryObject.getCache(ACT_DOC);
+    }
+
     assignEntryClass(type){
         switch(type){
             case 'lift':
@@ -167,6 +171,11 @@ class ActivityObj {
 class Entry {
     findMax(w, r){
         return Math.round(((w/maxVals[r-1]) + Number.EPSILON) * 10000) / 10000;
+    }
+
+    unitFilter(val, unit){
+        if(unit === 'lbs') return val;
+        else if(unit === 'kgs') return Math.round((val*conversionFactorKg + Number.EPSILON) * 10000) / 10000;
     }
 }
 
@@ -226,7 +235,7 @@ class LiftEntry extends Entry {
         if(val.theomax<lift.theo.min||lift.theo.min===0){
             ACT_DOC.specificCache.lift.theo.min = val.theomax;
         }
-        let totalWeightAdd = Math.round((val.weight*val.reps + Number.EPSILON) * 10000) / 10000;
+        let totalWeightAdd = Math.round(val.weight*val.reps + Number.EPSILON);
         ACT_DOC.specificCache.lift.totalWeight += totalWeightAdd;
         return ACT_DOC;
     }
@@ -256,6 +265,27 @@ class LiftEntry extends Entry {
         totalWeight = Math.round((totalWeight + Number.EPSILON) * 10000) / 10000;
         ACT_DOC.specificCache.lift = { max, theo, totalWeight };
         return ACT_DOC;
+    }
+
+    getCache(ACT_DOC){
+        let unit = ACT_DOC.unit;
+        let specificCache = ACT_DOC.specificCache.lift;
+        let returnCache = [
+            ['Latest', 
+                this.unitFilter(ACT_DOC.values[ACT_DOC.values.length-1].weight, unit)
+                +' '+unit+' for '+ACT_DOC.values[ACT_DOC.values.length-1].reps+' reps'],
+            ['Max',
+                this.unitFilter(specificCache.max.weight, unit)
+                +' '+unit+' for '+specificCache.max.reps+' reps'],
+            ['Theoretical Max', this.unitFilter(specificCache.theo.max, unit)+' '+unit],
+            ['Duration', ACT_DOC.commonCache.duration+' days'],
+            ['Total Weight Lifted', specificCache.totalWeight]
+        ];
+        let returnGraph = {
+            max: specificCache.theo.max,
+            min: specificCache.theo.min
+        }
+        return { info: returnCache, graphBounds: returnGraph };
     }
 }
 
@@ -298,13 +328,8 @@ class BWEntry extends Entry {
 
     }
 
-    convertVals(){
-        // for(var i = 0;i<arr.length;i++){
-        //     let cur = arr[i];
-        //     let newWeight = Math.round((cur.weight*conv + Number.EPSILON) * 10000) / 10000;
-        //     arr[i].weight = newWeight;
-        // }
-        // return arr;
+    getCache(ACT_DOC){
+        
     }
 }
 
@@ -334,7 +359,7 @@ class CardioEntry extends Entry {
 
     }
 
-    convertVals(ACT_DOC){
+    getCache(ACT_DOC){
 
     }
 }
@@ -365,8 +390,8 @@ class HRateEntry extends Entry {
 
     }
 
-    convertVals(ACT_DOC){
-
+    getCache(ACT_DOC){
+        
     }
 }
 
@@ -396,8 +421,8 @@ class BWEXEntry extends Entry {
 
     }
 
-    convertVals(ACT_DOC){
-
+    getCache(ACT_DOC){
+        
     }
 }
 
