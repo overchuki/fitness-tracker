@@ -2,7 +2,7 @@
     <h3 class = "form-title-dark"><%= title %></h3>
     <input type="hidden" id="hiddenToken" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" id="hiddenUserId" name="_id" value="<%= user._id %>">
-    <input type="hidden" id="exType" name="_id" value="<%= exType %>">
+    <input type="hidden" id="exType" name="_exType" value="<%= exType %>">
     <div class="mb-3">
         <label for="addActName" class="form-label labels-dark">Name of Lift</label>
         <input type="text" class="form-control input-cust-dark" id="addActName" maxlength="20" required name="name">

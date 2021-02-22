@@ -1,28 +1,30 @@
 var entryForm = document.getElementById('entryForm');
+var addEntryToken = document.getElementById('hiddenToken').value.trim();
+var addEntryError = document.getElementById('add-entry-err-message');
+var activityId = document.getElementById('hiddenActId').value.trim();
+var exTypeStr = document.getElementById('exType').value.trim();
+
+//move to classes
 var addEntryWeight = document.getElementById('addEntryWeight');
 var addEntryReps = document.getElementById('addEntryReps');
 var addEntryDate = document.getElementById('addEntryDate');
-var addEntryToken = document.getElementById('hiddenToken');
-var hiddenActId = document.getElementById('hiddenActId');
-var addEntryError = document.getElementById('add-entry-err-message');
 
+var chart;
 var ctx = document.getElementById('chartDiv').getContext('2d');
 var timeFormat = 'YYYY-MM-DD';
-var plateArr = [0, 45];
 var config;
 var gridLineColor = '#2b2b2c';
+var ActivityObject;
 
-var activityId = document.getElementById('hiddenActId');
 var vals;
-var theomin;
-var theomax;
 var unit;
+var stepArr = [0];
 var dispArr;
 
 onload = () => {
     createPlateArray();
 
-    var url = './get-vals'+activityId.value;
+    var url = './get-vals'+activityId;
 
     getData(url)
         .then(res => {
@@ -30,11 +32,9 @@ onload = () => {
                 console.log(res['errors']);
             }else if(res['vals']){
                 vals = res['vals'];
-                theomax = res['theomax'];
-                theomin = res['theomin'];
                 unit = res['unit'];
+                ActivityObject = new ActivityFront(exTypeStr, res['cache']);
                 verifyData();
-                makeChart();
             }else{
                 console.log('Unexpected response: ', res);
             }
@@ -45,19 +45,21 @@ onload = () => {
         });
 }
 
-function verifyData(){
-    localStorage.setItem('vals', JSON.stringify(vals));
-    localStorage.setItem('unit', unit);
+//main class func
+// function verifyData(){
+//     localStorage.setItem('vals', JSON.stringify(vals));
+//     localStorage.setItem('unit', unit);
 
-    createPlateArray(theomax);
+//     createPlateArray(theomax);
     
-    var { minVal, maxVal, step } = configureTicks();
-    dispArr = createDispArr(vals);
+//     var { minVal, maxVal, step } = configureTicks();
+//     dispArr = createDispArr(vals);
     
-    setConfig(unit, minVal, maxVal, step, dispArr);
-    makeChart();
-}
+//     setConfig(unit, minVal, maxVal, step, dispArr);
+//     makeChart();
+// }
 
+//act class func
 function createPlateArray(max){
     let cur = plateArr[plateArr.length-1];
     while(max+11>cur){
@@ -66,6 +68,7 @@ function createPlateArray(max){
     }
 }
 
+//act func
 function roundTo45(val, r){
     for(var i = 1;i<plateArr.length;i++){
         if(plateArr[i]>val){
@@ -78,6 +81,7 @@ function roundTo45(val, r){
     }
 }
 
+//act class func
 function configureTicks(){
     let min = theomin-10;
     let max = theomax+10;
@@ -89,6 +93,7 @@ function configureTicks(){
     return { minVal, maxVal, step };
 }
 
+//act class func
 function createDispArr(v){
     let result = [];
     for(var i = 0;i<v.length;i++){
@@ -99,9 +104,83 @@ function createDispArr(v){
     return result;
 }
 
+class ActivityFront {
+    constructor(exType, cache){
+        this.exType = exType;
+        this.cache = cache;
+        this.assignActivity();
+    }
+
+    verifyData(){
+
+        this.actObj.createStepArray();
+        
+        //var { minVal, maxVal, step } = this.actObj.configureTicks();
+        //dispArr = this.actObj.createDispArr(vals);
+        
+        //setConfig(unit, minVal, maxVal, step, dispArr);
+        makeChart();
+    }
+
+    assignActivity(){
+        switch(this.exType){
+            case 'lift':
+                this.actObj = new LiftObj(this.cache);
+                break;
+            case 'bodyweight':
+                //
+                throw Error('bodyweight not yet supported');
+                break;
+            case 'hrate':
+                throw Error('heartrate not yet supported');
+                break;
+            case 'cardio':
+                throw Error('cardio not yet supported');
+                break;
+            case 'bwex':
+                throw Error('bodyweight exercises not yet supported');
+                break;
+            default:
+                throw Error('Unrecongnized exercise type, frontend error.');
+        }
+    }
+}
+
+class LiftObj extends ActivityFront {
+    constructor(vals, cache){
+        this.cache = cache;
+        this.graphMax = this.cache.graphBounds.max;
+        this.graphMin = this.cache.graphBounds.min;
+        this.info = this.cache.info;
+    }
+
+    displayInfo(){
+
+    }
+
+    createStepArray(){
+        let cur = stepArr[0];
+        while(this.graphMax)
+
+        let cur = plateArr[plateArr.length-1];
+        while(max+11>cur){
+            cur += 45;
+            plateArr.push(cur);
+        }
+    }
+
+    configureTicks(){
+
+    }
+
+    createDispArr(){
+
+    }
+}
+
 function makeChart(){
     Chart.platform.disableCSSInjection = true;
-    var chart = new Chart(ctx, config);
+    chart = new Chart(ctx, config);
 }
 
 async function getData(url) {
@@ -112,7 +191,7 @@ async function getData(url) {
 entryForm.addEventListener('submit', function(e){
     e.preventDefault();
 
-    var url = './mod-lift'+hiddenActId.value.trim();
+    var url = './mod-lift'+activityId;
     var type = 'PUT';
 
     var data = {};
@@ -124,7 +203,7 @@ entryForm.addEventListener('submit', function(e){
     data['oldDate'] = '';
     data['unit'] = '';
     data['convert'] = false;
-    data['_csrf'] = addEntryToken.value;
+    data['_csrf'] = addEntryToken;
 
     sendData(url,data,type)
         .then(res => {
