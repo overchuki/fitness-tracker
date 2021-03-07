@@ -1,0 +1,10 @@
+{
+    "mongo": {
+        "username": "<USERNAME>",
+        "password": "<PASSWORD>",
+        "host": "<HOST>",
+        "port": "<PORT>",
+        "db": "<DATABASE>"
+    },
+    "jwt_secret": "<JWT_SECRET>"
+}
