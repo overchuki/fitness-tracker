@@ -174,8 +174,8 @@ class Entry {
     }
 
     unitFilter(val, unit){
-        if(unit === 'lbs') return val;
-        else if(unit === 'kgs') return Math.round((val*conversionFactorKg + Number.EPSILON) * 10000) / 10000;
+        if(unit === 'lbs') return Math.round(val);
+        else if(unit === 'kgs') return Math.round(val*conversionFactorKg);
     }
 }
 
@@ -279,7 +279,7 @@ class LiftEntry extends Entry {
                 +' '+unit+' for '+specificCache.max.reps+' reps'],
             ['Theoretical Max', this.unitFilter(specificCache.theo.max, unit)+' '+unit],
             ['Duration', ACT_DOC.commonCache.duration+' days'],
-            ['Total Weight Lifted', specificCache.totalWeight]
+            ['Total Weight Lifted', this.unitFilter(specificCache.totalWeight, unit)+' '+unit]
         ];
         let returnGraph = {
             max: specificCache.theo.max,

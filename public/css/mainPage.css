@@ -298,11 +298,11 @@ a{
     cursor: pointer;
     margin: 4px 5px;
 }
-.edit-lift-title{
+.act-info-title{
     text-align: right;
     color: #f8f9fa;
 }
-.edit-lift-form{
+.act-info{
     text-align: left;
     color: #f8f9fa;
 }

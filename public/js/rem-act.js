@@ -3,7 +3,7 @@ var actId = document.getElementById('hiddenActId');
 var _csrf = document.getElementById('hiddenToken');
 
 confirmDelete.addEventListener('click', () => {
-    var url = 'del-lift'+actId.value.trim();
+    var url = './del-act'+actId.value.trim();
     var type = 'DELETE';
 
     var data = {};
@@ -14,7 +14,7 @@ confirmDelete.addEventListener('click', () => {
             if(res['errors']){
                 console.log(res['errors']);
             }else if(res['success']){
-                window.location.href = './lifting';
+                window.location.href = './';
             }else{
                 console.log('unexpected server response');
             }
