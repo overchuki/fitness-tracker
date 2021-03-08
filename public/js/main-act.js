@@ -173,7 +173,7 @@ class LiftObj extends RootActObj {
         let maxVal = this.roundToStep(max, true);
         let minVal = this.roundToStep(min, false);
         let factor = 9;
-        if(unit === 'kgs') factor = 4;
+        if(unit === 'kgs') factor = 10;
         let step = (maxVal - minVal) / factor;
         return { minVal, maxVal, step };
     }
@@ -304,7 +304,7 @@ function setConfig(u, minVal, maxVal, st, dArr){
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'Weight'
+                        labelString: 'Weight ('+unit+')'
                     },
                     gridLines: {
                         color: gridLineColor

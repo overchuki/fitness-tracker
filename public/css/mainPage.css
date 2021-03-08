@@ -309,6 +309,9 @@ a{
 .edit-lift-error{
     text-align: left;
 }
+.edit-lift-title{
+    color: #f8f9fa;
+}
 .pad-top{
     padding-top: 8px;
 }

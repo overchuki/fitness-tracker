@@ -42,16 +42,16 @@ app.use((req, res, next) => {
     res.setHeader("Content-Security-Policy", "default-src 'self' https://use.fontawesome.com https://cdn.jsdelivr.net http://cdnjs.cloudflare.com");
     next();
 });
-// app.use((req, res, next) => {
-//     if(csrfOmit.indexOf(req.path)!==-1){
-//         next();
-//     }else{
-//         csrf({ cookie: true })(req,res,next);
-//     }
-// });
+app.use((req, res, next) => {
+    if(csrfOmit.indexOf(req.path)!==-1){
+        next();
+    }else{
+        csrf({ cookie: true })(req,res,next);
+    }
+});
 app.use(morgan('dev'));
 
-app.get('*', checkUser);
+app.use(checkUser);
 
 //ROOT Route
 app.get('/', (req, res) => {
@@ -64,8 +64,8 @@ app.get('/', (req, res) => {
 app.use(authRouter);
 
 //ACTIVITY Routes
-// app.use(requireAuth, activityRouter);
-app.use(activityRouter);
+app.use(requireAuth, activityRouter);
+// app.use(activityRouter);
 
 //404 page
 app.use((req, res) => {

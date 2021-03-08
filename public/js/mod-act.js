@@ -133,14 +133,11 @@ class RootActObj {
     constructor(exType){
         this.exType = exType;
     }
-
-
 }
 
 class LiftObj extends RootActObj {
     constructor(exType){
         super(exType);
-
     }
 
     setActiveInputs(){
