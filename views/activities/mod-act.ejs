@@ -4,6 +4,7 @@
     <body class="mainPage dark-main">
         <input type="hidden" id="hiddenToken" name="_csrf" value="<%= csrfToken %>">
         <input type="hidden" id="hiddenActId" name="_id" value="<%= activity._id %>">
+        <input type="hidden" id="exType" value="<%= exType %>">
         <div class="content container">
             <%- include('../partials/nav.ejs') %>
             <div class="mod-lift-title">

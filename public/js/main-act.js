@@ -204,9 +204,6 @@ entryForm.addEventListener('submit', function(e){
     data['type'] = 'add';
     data = ActivityObject.configureData(data);
     data['date'] = addEntryDate.value.trim();
-    data['name'] = '';
-    data['oldDate'] = '';
-    data['unit'] = '';
     data['exType'] = exTypeStr;
     data['_csrf'] = addEntryToken;
 

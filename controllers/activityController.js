@@ -59,6 +59,7 @@ const get_modify_activity_page = async (req, res) => {
     let actId = req.params.id;
     let act = await dbController.get_activity_by_id(actId);
     res.locals.activity = act;
+    res.locals.exType = act.exType;
     res.render('activities/mod-act', {
         title: 'Edit '+act.name,
         csrfToken: req.csrfToken()
