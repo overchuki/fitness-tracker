@@ -43,7 +43,8 @@ class ActivityObj {
             if((!arrExists&&index>=0)||this.userInput.oldDate===this.userInput.date){
                 let tempObj = ACT_DOC.values[oldObj.index];
                 ACT_DOC.values.splice(oldObj.index, 1);
-                let newVal = this.entryObject.setNewValue(this.userInput);
+                let newVal = this.entryObject.setNewValue(this.userInput, ACT_DOC.unit);
+                console.log(newVal);
                 ACT_DOC.values.splice(index, 0, newVal);
                 ACT_DOC = this.entryObject.modifyValueInEntry(ACT_DOC);
                 let response = { success: { msg: 'modified array', vals: ACT_DOC.values } };

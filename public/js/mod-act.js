@@ -1,7 +1,10 @@
 const _csrf = document.getElementById('hiddenToken').value.trim();
 const actId = document.getElementById('hiddenActId').value.trim();
 const exTypeStr = document.getElementById('exType').value.trim();
+const conversionFactorLb = 2.20462262;
+const conversionFactorKg = 0.45359237;
 
+let curNode = 0;
 let vals;
 let unit;
 
@@ -31,20 +34,10 @@ let activeDateInput;
 let activeErrorMsg;
 let deleteEntryButton;
 
-//SEPARATE INTO ACTIVITY SPECIFIC OBJECT
-//
-//EXTRA COMMENT
-let activeWeightInput;
+let activeValueInput;
 let activeRepsInput;
-// let activeValues;
 
 onload = () => {
-    if(unit==='lbs'){
-        lbRadio.checked = true;
-    }else if(unit==='kgs'){
-        kgRadio.checked = true;
-    }
-
     let url = './get-vals'+actId;
 
     getData(url)
@@ -52,11 +45,11 @@ onload = () => {
             if(res['errors']){
                 console.log(res['errors']);
             }else if(res['vals']){
-                vals = res['vals'];
+                vals = res['vals'].reverse();
                 unit = res['unit'];
-                // INITIATE ACTIVITY OBJECT
-                //
-                // START BY CALLING THE NEW FUNCTION FOR THE FOR LOOP BELOW
+                ActivityObject = new ActivityMod(exTypeStr);
+                ActivityObject.setCheckedUnit();
+                ActivityObject.addNodes(curNode, vals.length);
             }else{
                 console.log('Unexpected response: ', res);
             }
@@ -64,26 +57,53 @@ onload = () => {
         .catch(err => {
             console.log('logging error: ', err);
         });
-
-    //TURN INTO A FUNCTION SEPARATE AND CALL ABOVE ON SUCCESS
-    //
-    //EXTRA COMMENTS
-    for(let i = 0;i<vals.length;i++){
-        let cur = vals[i];
-        parentDiv.insertAdjacentHTML('beforeend', `
-            <div class="btm-marg">
-                <div class="mod-lift-entry">
-                    <h6 class="entry-list-title" id="${cur.date}">${cur.date}: ${Math.round(cur.weight)} ${unit} for ${cur.reps}.</h6>
-                </div>
-            </div>
-        `);
-        document.getElementById(cur.date).addEventListener('click', openEditField);
-    }
 }
 
 class ActivityMod {
     constructor(exType){
         this.assignObject(exType);
+    }
+
+    addNodes(start, end){
+        for(let i = start;i<end;i++){
+            let cur = vals[i];
+            parentDiv.insertAdjacentHTML('beforeend', `
+                <div class="btm-marg">
+                    <div class="mod-lift-entry">
+                        <h6 class="entry-list-title" id="${cur.date}">${cur.date}: ${ActivityObject.baseHTMLString(cur)}</h6>
+                    </div>
+                </div>
+            `);
+            document.getElementById(cur.date).addEventListener('click', openEditField);
+        }
+    }
+
+    setCheckedUnit(){
+        if(unit==='lbs'){
+            lbRadio.checked = true;
+        }else if(unit==='kgs'){
+            kgRadio.checked = true;
+        }
+    }
+
+    setActiveInputsRoot(){
+        this.actObj.setActiveInputs();
+    }
+
+    getActiveInputValuesRoot(inDate){
+        return this.actObj.getActiveInputValues(inDate);
+    }
+
+    baseHTMLString(entry){
+        return this.actObj.basicViewHTMLString(entry);
+    }
+
+    expandedHTMLString(entry){
+        return this.actObj.expandedViewHTMLString(entry);
+    }
+
+    unitFilter(val){
+        return this.actObj.actUnitFilter(val);
     }
 
     assignObject(exType){
@@ -123,7 +143,45 @@ class LiftObj extends RootActObj {
 
     }
 
+    setActiveInputs(){
+        activeValueInput = document.getElementById('modEntryWeight');
+        activeRepsInput = document.getElementById('modEntryReps');
+    }
 
+    getActiveInputValues(inDate){
+        let inValue = activeValueInput.value.trim();
+        let inReps = activeRepsInput.value.trim();
+
+        if(inValue===this.actUnitFilter(activeEditEntry.weight)+''&&inReps===activeEditEntry.reps+''&&inDate===activeEditEntry.date){
+            activeErrorMsg.className = 'error-message';
+            activeErrorMsg.innerHTML = 'Please change something about this entry.';
+            return null;
+        }
+        return { inValue, inReps };
+    }
+
+    basicViewHTMLString(entry){
+        return `${this.actUnitFilter(entry.weight)} ${unit} for ${entry.reps}.`;
+    }
+
+    expandedViewHTMLString(entry){
+        return `
+            <div class="col-3">
+                <input type="number" id="modEntryWeight" class="form-control input-cust-dark-small" value="${this.actUnitFilter(entry.weight)}" aria-label="weight" required>
+            </div>
+            <div class="col-3">
+                <input type="number" max="20" min="1" id="modEntryReps" class="form-control input-cust-dark-small" name="reps" value="${entry.reps}" required>
+            </div>
+        `;
+    }
+
+    actUnitFilter(val){
+        if(unit === 'kgs'){
+            return Math.round(val*conversionFactorKg);
+        }else{
+            return Math.round(val);
+        }
+    }
 }
 
 function openEditField(event){
@@ -153,22 +211,12 @@ function setActiveEdit(bool, tN){
     activeEdit = bool;
     activeEditNode = tN;
     if(activeEdit){
-        //CHANGE LIFT NAMES EDIT FORM TO HAVE DIFF ACTIVITIES
-        //
-        //EXTRA COMMENTS
         let htmlStr = `
             <div class="mod-entry-edit">
                 <form id="modifyLiftForm" class="form-inline">
                     <div class="row">
                         <input type="hidden" id="hiddenOldDate" name="oldDate" value="${activeEditEntry.date}">
-                        
-                        <div class="col-3">
-                            <input type="number" id="modEntryWeight" class="form-control input-cust-dark-small" value="${Math.round(activeEditEntry.weight)}" aria-label="weight" required>
-                        </div>
-                        <div class="col-3">
-                            <input type="number" max="20" min="1" id="modEntryReps" class="form-control input-cust-dark-small" name="reps" value="${activeEditEntry.reps}" required>
-                        </div>
-
+                        ${ActivityObject.expandedHTMLString(activeEditEntry)}
                         <div class="col-3">
                             <input type="date" id="modEntryDate" class="form-control input-cust-dark-small" value="${activeEditEntry.date}" aria-label="date" required>
                         </div>
@@ -195,11 +243,7 @@ function setActiveEdit(bool, tN){
         activeErrorMsg = document.getElementById('mod-lift-error');
         activeErrorMsg.innerHTML = '';
         
-        //CHANGE TO ACTIVITY SPECIFIC FIELDS
-        //
-        //EXTRA COMMENTS
-        activeWeightInput = document.getElementById('modEntryWeight');
-        activeRepsInput = document.getElementById('modEntryReps');
+        ActivityObject.setActiveInputsRoot();
         
         activeForm.addEventListener('submit', submitModRequest);
         deleteEntryButton.addEventListener('click', deleteEntry);
@@ -208,23 +252,11 @@ function setActiveEdit(bool, tN){
 
 function submitModRequest(e){
     e.preventDefault();
-
-    //CHANGE TO ACTIVITY SPECIFIC FIELDS
-    //
-    //EXTRA COMMENTS
-    let inWeight = activeWeightInput.value.trim();
-    let inReps = activeRepsInput.value.trim();
     
     let inDate = activeDateInput.value.trim();
-
-    //CHANGE IF TO CHECK FOR CHANGE WITHIN ACTIVITY OBJECT
-    //
-    //EXTRA COMMENTS
-    if(inWeight===Math.round(activeEditEntry.weight)+''&&inReps===activeEditEntry.reps+''&&inDate===activeEditEntry.date){
-        activeErrorMsg.className = 'error-message';
-        activeErrorMsg.innerHTML = 'Please change something about this entry.';
-    }else{
-        sendMessage('mod', inWeight, inReps, inDate, '', activeOldDate.value.trim(), '', 'Successfully modified.');
+    let newValues = ActivityObject.getActiveInputValuesRoot(inDate);
+    if(newValues){
+        sendMessage('mod', newValues.inValue, newValues.inReps, inDate, '', activeOldDate.value.trim(), '', 'Successfully modified.');
     }
 }
 
@@ -257,19 +289,14 @@ submitUnitBtn.addEventListener('click', () => {
     }
 });
 
-function sendMessage(dType, dWeight, dReps, dDate, dName, dOldDate, dUnit, successMsg){
+function sendMessage(dType, dValue, dReps, dDate, dName, dOldDate, dUnit, successMsg){
     let url = './mod-act'+actId;
     let type = 'PUT';
 
     let data = {};
     data['type'] = dType;
-
-    //CHANGE TO ACTIVITY SPECIFIC FIELDS
-    //
-    //EXTRA COMMENTS
-    data['value'] = dWeight;
+    data['value'] = dValue;
     data['reps'] = dReps;
-    
     data['date'] = dDate;
     data['name'] = dName;
     data['oldDate'] = dOldDate;

@@ -1,8 +1,31 @@
 const dbController = require('../controllers/databaseController');
 const actClassController = require('../controllers/activityClassController');
 
-const test_classes = () => {
-    res.status(400).json({ msg: 'currently empty' });
+const test_endpoint = async (req, res) => {
+    let newActId = req.params.newActId;
+    let actId = req.params.actId;
+    // let activities = await dbController.get_activity_array(userId, 'lift');
+    let act = await dbController.get_activity_by_id(actId);
+    console.log(act);
+    console.log(act['vals']);
+    // for(let i = 0;i<activities.length;i++){
+    //     console.log(activities[i].name + ' : ' + activities[i]._id);
+    // }
+    // console.log(act.vals.length);
+
+    for(let i = 0;i<1;i++){
+        let cur = act.vals[i];
+        let data;
+        data['type'] = 'add';
+        data['value'] = cur.weight;
+        data['reps'] = cur.reps;
+        data['date'] = cur.date;
+        data['exType'] = 'lift';
+
+        modify_activity_db(data, newActId);
+    }
+
+    res.send('changed one');
 }
 
 //error handler
@@ -92,9 +115,11 @@ const add_activity_db = async (req, res) => {
 }
 
 //{ type, value, reps, date, name, oldDate, unit, exType }
-const modify_activity_db = async (req, res) => {
-    let userInput = req.body;
-    let actId = req.params.id;
+const modify_activity_db = async (uIn, act_id) => {
+    // let userInput = req.body;
+    // let actId = req.params.id;
+    let userInput = uIn;
+    let actId = act_id;
     let act = await dbController.get_activity_by_id(actId);
     let response = {};
 
@@ -163,5 +188,5 @@ module.exports = {
     get_activity_values,
     get_modify_activity_page,
     get_remove_activity_page,
-    test_classes
+    test_endpoint
 }

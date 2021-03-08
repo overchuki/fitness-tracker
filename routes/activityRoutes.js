@@ -22,6 +22,6 @@ router.get('/rem-act:id', activityController.get_remove_activity_page);
 router.delete('/del-act:id', activityController.remove_activity);
 
 //dev method
-router.get('/test-classes', activityController.test_classes);
+router.get('/test-endpoint/:newActId/:actId', activityController.test_endpoint);
 
 module.exports = router;
