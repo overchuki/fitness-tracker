@@ -37,15 +37,14 @@ class ActivityObj {
     }
 
     modValuesEntry(ACT_DOC){
-        let { index, arrExists } = this.binarySearchByDate(ACT_DOC.values, this.userInput.date);
+        let reqObj = this.binarySearchByDate(ACT_DOC.values, this.userInput.date);
         let oldObj = this.binarySearchByDate(ACT_DOC.values, this.userInput.oldDate);
         if(oldObj.arrExists){
-            if((!arrExists&&index>=0)||this.userInput.oldDate===this.userInput.date){
-                let tempObj = ACT_DOC.values[oldObj.index];
+            if((!reqObj.arrExists&&reqObj.index>=0)||this.userInput.oldDate===this.userInput.date){
                 ACT_DOC.values.splice(oldObj.index, 1);
                 let newVal = this.entryObject.setNewValue(this.userInput, ACT_DOC.unit);
-                console.log(newVal);
-                ACT_DOC.values.splice(index, 0, newVal);
+                let newObj = this.binarySearchByDate(ACT_DOC.values, this.userInput.date);
+                ACT_DOC.values.splice(newObj.index, 0, newVal);
                 ACT_DOC = this.entryObject.modifyValueInEntry(ACT_DOC);
                 let response = { success: { msg: 'modified array', vals: ACT_DOC.values } };
                 return { ACT_DOC, response };
