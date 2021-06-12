@@ -20,7 +20,6 @@ const connectDB = function(){
 const authRouter = require('./routes/authRoutes');
 const activityRouter = require('./routes/activityRoutes');
 
-// let csrfProtection = csrf({ cookie: true });
 let csrfOmit = ['/login','/signup'];
 
 //ejs view engine
